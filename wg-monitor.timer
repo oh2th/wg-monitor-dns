@@ -1,0 +1,9 @@
+[Unit]
+Description=WireGuard Monitor - Monitor Peers for DNS changes
+
+[Timer]
+OnUnitActiveSec=60s
+OnBootSec=300s
+
+[Install]
+WantedBy=timers.target

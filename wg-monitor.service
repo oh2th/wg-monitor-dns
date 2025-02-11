@@ -1,0 +1,6 @@
+[Unit]
+Description=WireGuard Monitor - Monitor Peers for DNS changes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/perl /usr/local/bin/wg-monitor.pl

@@ -3,10 +3,12 @@ use strict;
 use warnings;
 
 # Maximum allowed handshake age in seconds
-my $max_handshake_age = 90;
+my $max_handshake_age = 135;
 
 # Get all WireGuard interface config files
-my @wg_configs = glob('/etc/wireguard/wg[0-9][0-9]?.conf');
+my @wg_configs = glob('/etc/wireguard/wg*.conf');
+
+print "Found ", scalar @wg_configs, " WireGuard interface(s).\n";
 
 foreach my $config (@wg_configs) {
     if ($config =~ m|/etc/wireguard/(wg\d+)\.conf|) {
