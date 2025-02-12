@@ -4,6 +4,7 @@ use warnings;
 
 # Maximum allowed handshake age in seconds
 my $max_handshake_age = 135;
+my $log_file = "/var/log/wg-monitor.log";
 
 # Get all WireGuard interface config files
 my @wg_configs = glob('/etc/wireguard/wg*.conf');
@@ -46,6 +47,7 @@ foreach my $config (@wg_configs) {
                 if (exists $endpoints{$peer}) {
                     system("wg set $interface peer $peer endpoint $endpoints{$peer}");
                     print "Peer $peer reset successfully.\n";
+                    log_action($peer, $interface, "(none)");
                 } else {
                     print "Endpoint for peer $peer not found in config.\n";
                 }
@@ -56,6 +58,7 @@ foreach my $config (@wg_configs) {
                     if (exists $endpoints{$peer}) {
                         system("wg set $interface peer $peer endpoint $endpoints{$peer}");
                         print "Peer $peer reset successfully.\n";
+                        log_action($peer, $interface, $elapsed);
                     } else {
                         print "Endpoint for peer $peer not found in config.\n";
                     }
@@ -63,4 +66,11 @@ foreach my $config (@wg_configs) {
             }
         }
     }
+}
+
+sub log_action {
+    my ($peer, $interface, $elapsed) = @_;
+    open my $log_fh, '>>', $log_file or die "Cannot open log file: $!";
+    print $log_fh scalar localtime, " - Peer $peer on $interface reset (handshake age: $elapsed sec)\n";
+    close $log_fh;
 }
